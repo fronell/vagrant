@@ -1,0 +1,47 @@
+# Remove unnecessary packages
+rm -f /etc/yum.repos.d/puppet.repo
+rm -f /etc/yum.repos.d/puppetlabs.repo
+yum remove puppet puppetlabs-release -y
+# To fix the iwconfig errors on startup, we have to install the
+# wireless-tools package and then remove it
+yum install wireless-tools -y
+yum remove wireless-tools -y
+
+# Remove RVM
+# The reason for this is because RVM will set the GEM_HOME and GEM_PATH which
+# screws up the gem paths for the Chef omnibus installer
+rvm implode
+rm -rf /etc/rvmrc
+rm -rf /home/vagrant/.gem
+# May not be needed, check if dir exists
+rm -rf /root/.gem
+
+# Install packages
+rpm -i http://ftp.linux.ncsu.edu/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+yum update -y
+# kernel-devel is for VirtualBox additions
+yum install kernel-devel -y
+curl -L https://www.opscode.com/chef/install.sh | bash
+# Reboot to use the updated kernel so VirtualBox picks up on it
+init 6
+
+# Install VirtualBox additions
+# Do this after updating packages because it needs to run against kernel-devel
+# packages of the current running kernel
+-On the VM window (not the Manager window), Devices -> Install Guest Additions
+mount /dev/cdrom /mnt
+/mnt/VBoxLinuxAdditions.run
+
+# Disable services
+chkconfig avahi-daemon off
+chkconfig cpuspeed off
+chkconfig ip6tables off
+chkconfig iptables off
+chkconfig iscsi off
+chkconfig iscsid off
+chkconfig smartd off
+chkconfig yum-updatesd off
+
+# VM Hardware Changes
+# Nothing to do here, audio/USB is already disabled
+init 0
