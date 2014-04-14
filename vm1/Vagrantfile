@@ -1,9 +1,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "CentOS_5_x64"
-  #config.vm.box = "centos58-64"
-  #config.vm.box_url = "file:///Users/chriswornell/Downloads/CentOS-5.8-x86_64.box"
+  config.vm.box = "centos510x64"
+  #config.vm.box_url = "file:///Users/chriswornell/Downloads/centos510x64.box"
 
   config.vm.network "private_network", ip: "192.168.33.101",
         virtualbox__intnet: true

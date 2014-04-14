@@ -22,6 +22,20 @@ yum update -y
 # kernel-devel is for VirtualBox additions
 yum install kernel-devel -y
 curl -L https://www.opscode.com/chef/install.sh | bash
+
+# Disable services
+chkconfig avahi-daemon off
+chkconfig cpuspeed off
+chkconfig mcstrans off
+chkconfig ip6tables off
+chkconfig iptables off
+chkconfig iscsi off
+chkconfig iscsid off
+chkconfig pcscd off
+chkconfig restorecond off
+chkconfig smartd off
+chkconfig yum-updatesd off
+
 # Reboot to use the updated kernel so VirtualBox picks up on it
 init 6
 
@@ -32,15 +46,15 @@ init 6
 mount /dev/cdrom /mnt
 /mnt/VBoxLinuxAdditions.run
 
-# Disable services
-chkconfig avahi-daemon off
-chkconfig cpuspeed off
-chkconfig ip6tables off
-chkconfig iptables off
-chkconfig iscsi off
-chkconfig iscsid off
-chkconfig smartd off
-chkconfig yum-updatesd off
+# Change the hostname to get the correct CentOS version
+cat /etc/issue
+sed -i 's/HOSTNAME=.*/HOSTNAME=centos510/' /etc/sysconfig/network
+
+# Restart again to verify everything is good
+init 6
+
+# Final cleanup
+yum clean all
 
 # VM Hardware Changes
 # Nothing to do here, audio/USB is already disabled
