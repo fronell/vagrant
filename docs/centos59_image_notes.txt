@@ -1,0 +1,57 @@
+# IMPORTANT!!!!
+# This image has an issue where it hangs on eth1 and does not pickup the DNS
+# settings via DHCP.  Whats weird is if you restart the VM, eth1 will come up 
+# and the DNS will work
+
+# Image location
+## Link Site
+http://www.vagrantbox.es/
+## Download
+http://tag1consulting.com/files/centos-5.9-x86-64-minimal.box
+
+# Remove unnecessary packages
+rm -f /etc/yum.repos.d/puppet.repo
+rm -f /etc/yum.repos.d/epel-testing.repo
+yum remove puppet -y
+yum remove chef -y
+yum remove selinux-policy -y
+
+# Install packages
+# Setup repoforge
+wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el5.rf.x86_64.rpm
+rpm -i rpmforge-release-0.5.3-1.el5.rf.x86_64.rpm
+rm -f rpmforge-release-0.5.3-1.el5.rf.x86_64.rpm
+yum install vim-enhanced -y
+yum update -y
+curl -L https://www.opscode.com/chef/install.sh | bash
+
+# Disable services
+chkconfig iscsi off
+chkconfig iscsid off
+chkconfig restorecond off
+
+# Change the hostname to get the correct CentOS version
+cat /etc/issue
+sed -i 's/HOSTNAME=.*/HOSTNAME=centos510x64/' /etc/sysconfig/network
+
+# Reboot to use the updated kernel so VirtualBox picks up on it
+init 6
+
+# Install VirtualBox additions
+# Do this after updating packages because it needs to run against kernel-devel
+# packages of the current running kernel
+-On the VM window (not the Manager window), Devices -> Install Guest Additions
+mount /dev/cdrom /mnt
+/mnt/VBoxLinuxAdditions.run
+
+# Restart again to verify everything is good
+init 6
+
+# Final cleanup
+yum clean all
+
+# VM Hardware Changes
+init 0
+-Remove Floppy and CD from boot order
+-Disable audio
+-Disable USB

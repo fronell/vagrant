@@ -4,9 +4,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos510x64"
   #config.vm.box_url = "file:///Users/chriswornell/Downloads/centos510x64.box"
 
-  config.vm.hostname = "vm1.local"
+  config.vm.hostname = "utility-vm.local"
 
-  config.vm.network "private_network", ip: "192.168.10.101",
+  config.vm.network "private_network", ip: "192.168.10.110",
         virtualbox__intnet: true
 
   config.vm.provider "virtualbox" do |vb|

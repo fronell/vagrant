@@ -1,3 +1,9 @@
+# Image location
+## Link Site
+http://www.vagrantbox.es/
+## Download
+https://dl.dropbox.com/u/17738575/CentOS-5.8-x86_64.box
+
 # Remove unnecessary packages
 rm -f /etc/yum.repos.d/puppet.repo
 rm -f /etc/yum.repos.d/puppetlabs.repo
