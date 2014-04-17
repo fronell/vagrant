@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "vm1.local"
 
   config.vm.network "private_network", ip: "192.168.10.101",
-        virtualbox__intnet: true
+    virtualbox__intnet: true
 
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1

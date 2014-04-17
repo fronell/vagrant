@@ -9,9 +9,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "192.168.10.110",
         virtualbox__intnet: true
 
+  config.vm.synced_folder "~/data", "/data"
+
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1
-    vb.memory = 512
+    # 1.5GB is used loading marshal file when mirroring rubygems.org
+    # Using 2GB when running reposync and gem mirror
+    vb.memory = 2560
     vb.gui = false
   end
 
