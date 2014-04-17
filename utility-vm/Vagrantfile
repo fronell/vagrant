@@ -13,9 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1
-    # 1.5GB is used loading marshal file when mirroring rubygems.org
-    # Using 2GB when running reposync and gem mirror
-    vb.memory = 2560
+    vb.memory = 512
     vb.gui = false
   end
 
