@@ -1,4 +1,6 @@
 #!/bin/bash
+# Script to get around vagrant errors when deleting node/client on destroy
+# https://github.com/mitchellh/vagrant/issues/2476
 
 CHEF_DIR=~/chef
 VAGRANT_DIR=$PWD
