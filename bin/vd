@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CHEF_DIR=~/chef
+VAGRANT_DIR=$PWD
+
+VM=`grep hostname Vagrantfile | sed -E 's/.*hostname = "(.*)"/\1/'`
+vagrant destroy -f
+cd $CHEF_DIR
+knife node delete $VM -y
+knife client delete $VM -y
+cd $VAGRANT_DIR

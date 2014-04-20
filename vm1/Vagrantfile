@@ -6,8 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.hostname = "vm1.local"
 
-  config.vm.network "private_network", ip: "192.168.10.101",
-    virtualbox__intnet: true
+  config.vm.network "private_network", ip: "192.168.10.11"
 
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1
@@ -15,13 +14,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.gui = false
   end
 
-#  config.vm.provision "chef_client" do |chef|
-#    chef.chef_server_url = "http://192.168.1.79:8000"
-#    chef.validation_key_path = "~/chef/.chef/validation.pem"
-#    #chef.run_list = [ "recipe[java_wrapper::default]" ]
-#    #chef.add_role "base"
-#    #chef.environment = "dev"
-#    chef.delete_node = true
-#    chef.delete_client = true
-#  end
+  config.vm.provision "chef_client" do |chef|
+    chef.chef_server_url = "http://192.168.1.79:8000"
+    chef.validation_key_path = "~/chef/.chef/validation.pem"
+    chef.run_list = [ "recipe[linux_base-runlist]" ]
+    #chef.add_role "base"
+    #chef.environment = "dev"
+    #chef.delete_node = true
+    #chef.delete_client = true
+  end
 end

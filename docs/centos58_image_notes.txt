@@ -7,11 +7,18 @@ https://dl.dropbox.com/u/17738575/CentOS-5.8-x86_64.box
 # Remove unnecessary packages
 rm -f /etc/yum.repos.d/puppet.repo
 rm -f /etc/yum.repos.d/puppetlabs.repo
+rm -f rm -f /etc/yum.repos.d/mirrors-rpmforge*
 yum remove puppet puppetlabs-release -y
 # To fix the iwconfig errors on startup, we have to install the
 # wireless-tools package and then remove it
 yum install wireless-tools -y
 yum remove wireless-tools -y
+yum remove selinux-policy -y
+yum remove avahi -y
+yum remove cpuspeed -y
+yum remove smartmontools -y
+yum remove yum-updatesd -y
+yum remove wpa_supplicant -y
 
 # Remove RVM
 # The reason for this is because RVM will set the GEM_HOME and GEM_PATH which
@@ -19,19 +26,14 @@ yum remove wireless-tools -y
 rvm implode
 rm -rf /etc/rvmrc
 rm -rf /home/vagrant/.gem
-# May not be needed, check if dir exists
-rm -rf /root/.gem
 
 # Install packages
-rpm -i http://ftp.linux.ncsu.edu/pub/epel/5/i386/epel-release-5-4.noarch.rpm
 yum update -y
 # kernel-devel is for VirtualBox additions
 yum install kernel-devel -y
 curl -L https://www.opscode.com/chef/install.sh | bash
 
 # Disable services
-chkconfig avahi-daemon off
-chkconfig cpuspeed off
 chkconfig mcstrans off
 chkconfig ip6tables off
 chkconfig iptables off
@@ -39,8 +41,10 @@ chkconfig iscsi off
 chkconfig iscsid off
 chkconfig pcscd off
 chkconfig restorecond off
-chkconfig smartd off
-chkconfig yum-updatesd off
+
+# Change the hostname to get the correct CentOS version
+cat /etc/issue
+sed -i 's/HOSTNAME=.*/HOSTNAME=centos510x64/' /etc/sysconfig/network
 
 # Reboot to use the updated kernel so VirtualBox picks up on it
 init 6
@@ -51,10 +55,6 @@ init 6
 -On the VM window (not the Manager window), Devices -> Install Guest Additions
 mount /dev/cdrom /mnt
 /mnt/VBoxLinuxAdditions.run
-
-# Change the hostname to get the correct CentOS version
-cat /etc/issue
-sed -i 's/HOSTNAME=.*/HOSTNAME=centos510/' /etc/sysconfig/network
 
 # Restart again to verify everything is good
 init 6
