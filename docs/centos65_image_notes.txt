@@ -1,0 +1,65 @@
+# Image location
+## Link Site
+http://www.vagrantbox.es/
+## Download
+https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box
+
+# Remove unnecessary packages
+yum remove iscsi-initiator-utils -y
+yum remove selinux-policy -y
+yum remove nfs-utils -y
+yum remove iptables-ipv6 -y
+yum remove lvm2-libs -y
+yum remove device-mapper-multipath-libs -y
+yum remove mdadm -y
+
+# Disable yum versionlock
+sed -i 's/enabled =.*/enabled = 0/' /etc/yum/pluginconf.d/versionlock.conf
+
+# Install packages
+## kernel-devel is for VirtualBox additions
+yum install kernel-devel -y
+## Chef
+curl -L https://www.opscode.com/chef/install.sh | bash
+
+# Update existing packages
+yum update -y
+
+# Disable services
+chkconfig iptables off
+
+# Change the hostname to get the correct CentOS version
+sed -i 's/HOSTNAME=.*/HOSTNAME=centos65x64/' /etc/sysconfig/network
+
+# Shutdown the VM
+init 0
+
+# Add a CDROM so we can mount the VirtualBox additions ISO
+Settings -> Storage -> Add CDROM
+
+# Install VirtualBox additions
+# Do this after updating packages because it needs to run against kernel-devel
+# packages of the current running kernel
+# Grab the iso download link from http://download.virtualbox.org/virtualbox/
+wget http://download.virtualbox.org/virtualbox/4.3.16/VBoxGuestAdditions_4.3.16.iso
+umount /mnt
+mount -o loop,ro VBoxGuestAdditions_4.3.16.iso /mnt
+sh /mnt/VBoxLinuxAdditions.run
+rm VBoxGuestAdditions_4.3.16.iso
+umount /mnt
+
+# Restart again to verify everything is good
+init 6
+
+# Final cleanup
+yum clean all
+
+# VM Hardware Changes
+## Nothing to do here, audio/USB is already disabled
+init 0
+
+# Exporting the VM for Vagrant
+vagrant package --base VM_NAME --output centos65x64.box
+vagrant box add centos65x64 centos65x64.box
+
+# Delete the VM from VirtualBox

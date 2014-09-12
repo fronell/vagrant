@@ -1,0 +1,26 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "centos65x64"
+  #config.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
+
+  config.vm.hostname = "vm3.local"
+
+  config.vm.network "private_network", ip: "192.168.10.13"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = 1
+    vb.memory = 512
+    vb.gui = false
+  end
+
+  #config.vm.provision "chef_client" do |chef|
+    #chef.chef_server_url = "http://192.168.1.79:8000"
+    #chef.validation_key_path = "~/chef/.chef/validation.pem"
+    #chef.run_list = [ "recipe[linux_base-runlist]" ]
+    #chef.add_role "base"
+    #chef.environment = "dev"
+    #chef.delete_node = true
+    #chef.delete_client = true
+  #end
+end
